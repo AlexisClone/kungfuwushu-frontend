@@ -34,11 +34,13 @@ class AppDrawer extends React.Component<IAppDrawer, {}> {
         { path: '/trainings', title: 'Trainings', icon: () => <BusinessIcon /> },
         { path: '/members', title: 'Members', icon: () => <FaceIcon /> },
         { path: '/programs', title: 'Programmes', icon: () => <ListAssignment /> },
+        { path: '/groups', title: 'Groupes', icon: () => <ListAssignment /> },
         { path: '/exercices', title: 'Exercices', icon: () => <Assignment /> },
         { path: '/ranks', title: 'Grades', icon: () => <Grade /> },
         { path: '/tests', title: 'Evaluations', icon: () => <AssignmentTurnedIn /> },
         { path: '/myrank', title: 'Mon grade', icon: () => <Grade /> },
         { path: '/mytests', title: 'Mes évaluations', icon: () => <Assessment /> },
+
     ];
 
     public render(): JSX.Element {

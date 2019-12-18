@@ -39,6 +39,9 @@ import { RanksList, NewRank, EditRank } from "../components/ranks";
 import { MyRank, MyTests, TestDetails, ExerciseResultDetails, ExerciseScaleDetails } from "../components/member-space";
 import { ProgramsList, NewProgram, EditProgram } from "../components/programs";
 import { ExercisesList, NewExercise, EditExercise } from "../components/exercises";
+import GroupsList from "../components/groups/GroupsList";
+import EditGroup from "../components/groups/EditGroup";
+import NewGroup from '../components/groups/NewGroup';
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -195,6 +198,9 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
                     <Route exact path='/programs' component={ProgramsList} />
                     <Route path='/new-program' component={NewProgram} />
                     <Route path='/programs/:id/edit' component={EditProgram} />
+                    <Route exact path='/groups' component={GroupsList} />
+                    <Route path='/new-group' component={NewGroup} />
+                    <Route path='/groups/:id/edit' component={EditGroup} />
                     <Route exact path='/ranks' component={RanksList} />
                     <Route path='/new-rank' component={NewRank} />
                     <Route path='/ranks/:id/edit' component={EditRank} />

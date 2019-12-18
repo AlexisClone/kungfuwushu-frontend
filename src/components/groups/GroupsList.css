@@ -1,0 +1,56 @@
+.GroupsList {
+    flex-grow: 1;
+	max-width: 916px;
+}
+
+.GroupsList h1 {
+    margin: 0;
+}
+
+.GroupsList .header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+}
+
+.GroupsList .table-header,
+.GroupsList .header {
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    background-color: #FCFCFC;
+}
+
+.GroupsList .header button {
+    margin-left: auto;
+}
+
+.GroupsList .table-header {
+    padding: 4px 32px;
+    text-transform: uppercase;
+    font-size: 80%;
+}
+
+.GroupsList .empty {
+    align-self: center;
+    padding: 32px;
+}
+
+.GroupsList .Groups {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.GroupsList .table-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.4fr;
+}
+
+.GroupsList .table-header .name {
+    padding-left: 48px;
+}
+
+.GroupsList .item:hover,
+.GroupsList .dragged .item {
+    background-color: #FCFCFC;
+}

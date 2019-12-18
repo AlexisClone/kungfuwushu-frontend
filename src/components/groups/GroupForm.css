@@ -1,0 +1,48 @@
+.GroupForm {
+    display: flex;
+    justify-content: center;
+}
+
+.GroupForm .card {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 500px;
+    padding: 16px;
+}
+
+.GroupForm h1 {
+    text-align: center;
+    font-weight: 600;
+}
+
+.GroupForm h2 {
+    margin-top: 20px;
+}
+
+.GroupForm .infos-title {
+    margin-top: 0;
+}
+
+.GroupForm .name {
+    margin-bottom: 8px;
+}
+
+.GroupForm .actions {
+    display: flex;
+    margin-top: 30px;
+}
+
+.GroupForm .save {
+    margin-left: auto;
+}
+
+.GroupForm .exercises-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.GroupForm .exercises-title h2 {
+    margin-right: auto;
+}

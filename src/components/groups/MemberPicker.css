@@ -1,0 +1,70 @@
+.MemberPicker .ant-modal-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.MemberPicker .ant-modal-footer {
+    display: flex;
+    align-items: center;
+}
+
+.MemberPicker .selected-info {
+    margin-right: 16px;
+}
+
+.MemberPicker .back {
+    margin-right: auto;
+}
+
+.MemberPicker .SearchInput {
+    margin-left: 16px;
+    flex-grow: 1;
+}
+
+.MemberPicker .select {
+    width: 150px;
+}
+
+.MemberPicker .filters {
+    display: flex;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.MemberPicker .Members {
+    height: 300px;
+    overflow-y: auto;
+}
+
+.MemberPicker .Member {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 16px;
+}
+
+.MemberPicker .Member:last-child {
+    border: none;
+}
+
+.MemberPicker .Member:hover {
+    background-color: #FCFCFC;
+    cursor: pointer;
+}
+
+.MemberPicker .Member .checkbox {
+    padding-right: 16px;
+}
+
+.MemberPicker .Member .title {
+    font-weight: 700;
+    padding: 0;
+}
+
+.MemberPicker .Member .title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+

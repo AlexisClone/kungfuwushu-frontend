@@ -1,5 +1,5 @@
 import { get, post, put, del } from './requests.config';
-import { Rank, Test, ExerciseResult, Exercise, Program } from '../types';
+import { Rank, Test, ExerciseResult, Program } from '../types';
 
 export const Auth = {
 	login: (usernameOrEmail: string, password: string) => post(`/auth/signin`, { usernameOrEmail, password }),
@@ -16,14 +16,13 @@ export const Groups = {
 	all: () => get(`/groups`),
 	byId: (id: number) => get(`/groups/${id}`),
 	byTestId: (id: number) => get(`/tests/${id}/groups`),
+	delete: (id: number) => del(`/groups/${id}`)
 };
 
 export const Exercises = {
 	all: () => get(`/exercises`),
-	byId: (id: number) => get(`/exercises/${id}`),
-	create: (exercise: Exercise) => post(`/exercises`, exercise),
-	update: (exercise: Exercise) => put(`/exercises`, exercise),
 	delete: (id: number) => del(`/exercises/${id}`)
+
 };
 
 export const Programs = {

@@ -1,0 +1,63 @@
+.GroupItem {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.4fr;
+}
+
+.GroupItem  {
+    flex-shrink: 0;
+    width: auto;
+    padding: 16px 32px;
+    position: relative;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.GroupItem .name {
+    align-items: center;
+    display: flex;
+    font-weight: 600;
+}
+
+.GroupItem .exercises {
+    white-space: nowrap;
+}
+
+.GroupItem img {
+    width: 32px;
+    height: 32px;
+    margin-right: 16px;
+}
+
+.GroupItem .actions {
+    margin-left: 32px;
+    display: grid;
+}
+
+.GroupItem a {
+    line-height: 0;
+}
+
+.GroupItem .edit,
+.GroupItem .delete {
+    fill: #585858;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.GroupItem .edit:hover,
+.GroupItem .delete:hover {
+    fill: black;
+}
+
+.GroupItem .actions {
+    opacity: 0;
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    margin-left: auto;
+}
+
+.GroupItem:hover .actions {
+    opacity: 1;
+}
