@@ -49,7 +49,7 @@ export const styles = (theme: Theme) => ({
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       })
-  
+
     },
     drawerPaperClose: {
       overflowX: 'hidden',
@@ -57,9 +57,9 @@ export const styles = (theme: Theme) => ({
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing.unit * 7,
+      width: theme.spacing(7),
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing.unit * 9,
+        width: theme.spacing(9),
       },
     },
     toolbar: {
@@ -72,7 +72,7 @@ export const styles = (theme: Theme) => ({
     content: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.default,
-      padding: isMobile ? 0 : theme.spacing.unit * 3,
+      padding: isMobile ? 0 : theme.spacing(3),
       minHeight: '100%',
       height: '100%',
       flex: '1 1 auto',
@@ -81,7 +81,7 @@ export const styles = (theme: Theme) => ({
       flexDirection: 'column',
     },
     button: {
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     link: {
       textDecoration: 'none',

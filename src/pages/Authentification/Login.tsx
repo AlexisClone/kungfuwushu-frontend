@@ -1,16 +1,20 @@
 import * as React from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import * as querystring from 'querystring';
-import Cookies from 'js-cookie';
 
 import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Button, Icon } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 
-import { User } from '../state/User';
-import * as api from '../api';
+import { User } from '../../store/state/';
+import * as api from '../../api';
+
+import { IApplicationProps, login, setInfo } from '../../store/actions';
 
 interface ILoginProps {
-    login?: (data: any) => void;
+    login: (data: any) => void;
+    setInfo: (data: any) => void;
     match?: any;
     location?: any;
     classes?: any;
@@ -18,40 +22,69 @@ interface ILoginProps {
 }
 
 interface ILoginState {
-    email: string;
+    username: string;
     password: string;
+    error?: string;
 }
 
 class LoginPage extends React.Component<ILoginProps, ILoginState> {
-    public state = {
-        email: "",
-        password: ""
-    };
 
-    private handleEmailAddressChange = (event: any) => {
-        this.setState({ email: event.target.value })
+    componentWillMount() {
+      this.setState({
+        username: '',
+        password: '',
+        error: null
+      });
+    }
+
+    private handleUsernameChange = (event: any) => {
+        this.setState({ username: event.target.value });
     }
 
     private handlePasswordChange = (event: any) => {
-        this.setState({ password: event.target.value })
+        this.setState({ password: event.target.value });
     }
 
     private handleLogin = () => {
-          Promise.all([
-              api.Auth.login(this.state.email, this.state.password),
-          ]).then(([ token ]) => {
-              // Authentification success : token sent
-              this.props.login(this.state); // login into app : setting user
-              Cookies.set("token", 'Bearer ' + token.accessToken);
+        this.setState({
+          ...this.state,
+          error: null // remove error message
+        }, () => {
+
+            api.Auth.login(this.state.username, this.state.password)
+            .then(({ user, token }) => {
+              // Authentification success
+              // login into app : setting user and token
+              this.props.login({
+                  ...this.state,
+                  token
+              });
+              // store user info
+              this.props.setInfo(user);
+            }).catch((err) => {
+              // Error handler
+              console.log("err ", err);
+              this.setState({
+                  ...this.state,
+                  error: "Une erreur est survenue, veuillez réessayer."
+              });
+            });
+
           });
+        }
+
+    private submitOnEnter = (e: any) => {
+      // if enter is pressed
+      if (e.keyCode == 13) {
+        this.handleLogin();
+      }
     }
 
     public render(): JSX.Element {
         const classes = this.props.classes;
 
         if (this.props.user) {
-            const path: string = querystring.
-            parse((this.props.location.search as string).substr(1)).redirect as any || '/members';
+            const path: string = querystring.parse((this.props.location.search as string).substr(1)).redirect as any || '/members';
             return <Redirect to={path} />
         }
 
@@ -60,14 +93,15 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
                 <Paper className={classes.paper}>
                     <h2>{'Login'}</h2>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel htmlFor="email">Email Address</InputLabel>
+                        <InputLabel htmlFor="username">Username</InputLabel>
                         <Input
-                            value={this.state.email}
-                            onChange={this.handleEmailAddressChange}
-                            id="email"
+                            value={this.state.username}
+                            onChange={this.handleUsernameChange}
+                            onKeyDown={this.submitOnEnter}
+                            id="username"
                             startAdornment={
                                 <InputAdornment position="start">
-                                    <Icon>email</Icon>
+                                    <Icon>account_circle</Icon>
                                 </InputAdornment>}
                         />
                     </FormControl>
@@ -76,6 +110,7 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
                         <Input
                             value={this.state.password}
                             onChange={this.handlePasswordChange}
+                            onKeyDown={this.submitOnEnter}
                             type="password"
                             id="password"
                             startAdornment={
@@ -85,12 +120,12 @@ class LoginPage extends React.Component<ILoginProps, ILoginState> {
                         />
                     </FormControl>
                     <div className={classes.actions}>
-                        <Button variant="raised" className={classes.button}>
+                        <Button variant="contained" className={classes.button}>
                             Cancel
                         </Button>
                         <Button
                             onClick={this.handleLogin}
-                            variant="raised"
+                            variant="contained"
                             color="primary"
                             className={classes.button}>
                             Submit
@@ -110,7 +145,7 @@ const styles = (theme: Theme) => ({
     paper: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing(3),
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
@@ -120,19 +155,28 @@ const styles = (theme: Theme) => ({
         },
     }),
     field: {
-        marginTop: theme.spacing.unit * 3
+        marginTop: theme.spacing(3)
     },
     actions: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'row',
         alignContent: 'center'
     }),
     button: {
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing(1)
     },
 });
 
-export default withStyles(styles, { withTheme: true })(LoginPage as any) as any;
+const mapStateToProps = (state: IApplicationProps) => ({
+  user: state.user
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  login: (data: any) => dispatch(login(data)),
+  setInfo: (data: any) => dispatch(setInfo(data)),
+});
+
+export default withStyles(styles, { withTheme: true })(connect(mapStateToProps, mapDispatchToProps)(LoginPage as any) as any);

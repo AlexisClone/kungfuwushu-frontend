@@ -3,15 +3,14 @@ import { withRouter } from 'react-router';
 
 import './ProgramForm.css';
 import { Input, Button } from 'antd';
-
 import { ImagePicker, Card } from '../custom';
 
 import ExercisePicker from './ExercisePicker';
 import ExercisesScales from './ExercisesScales';
-
 const { TextArea } = Input;
 
 const ProgramForm = ({ title, program, onChange, onSave, history }) => {
+    
     const handleInputChange = (inputName) => ({target : {value}}) => {
         const modifiedProgram = {...program};
         modifiedProgram[inputName] = value;
@@ -35,7 +34,7 @@ const ProgramForm = ({ title, program, onChange, onSave, history }) => {
         exercisesScales.concat(pickedExercisesScales)
     );
 
-    const { name, description, image, exercisesScales } = program;
+    const { name, description, image, exercisesScales, type } = program;
     return (
         <div className="ProgramForm">
             <Card className="card">
@@ -53,7 +52,8 @@ const ProgramForm = ({ title, program, onChange, onSave, history }) => {
                     onChange={handleInputChange('description')}
                     value={description}
                 />
-                {program.type === 'RANK' &&
+                
+                
                     <React.Fragment>
                         <h2>Télécharger une image</h2>
                         <ImagePicker
@@ -61,10 +61,11 @@ const ProgramForm = ({ title, program, onChange, onSave, history }) => {
                             onChange={handleImageChange}
                         />
                     </React.Fragment>
-                }
+                
+
                 <div className="exercises-title">
                     <h2>Exercices</h2>
-                    <ExercisePicker onPicked={handleExercisesPicked} />
+                    <ExercisePicker onPicked={handleExercisesPicked} typeProg={type} />
                 </div>
                 {exercisesScales.length === 0? 
                     "Aucun exercice sélectionné." :

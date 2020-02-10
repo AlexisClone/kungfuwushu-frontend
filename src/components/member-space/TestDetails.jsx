@@ -32,7 +32,8 @@ const TestDetails = ({ match }) => {
                 {exercisesResults.map((exerciseResult, index) => 
 					<ExerciseItem
 						exerciseScale={exerciseResult.exerciseScale}
-						exerciseResult={exerciseResult}
+                        exerciseResult={exerciseResult}
+                        testId = {match.params.id}
 						key={index}
 					/>
 				)}

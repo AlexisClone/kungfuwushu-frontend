@@ -28,7 +28,7 @@ const ExercisePickerContainer = ({onPicked}) => {
     );
 }
 
-const ExercisePicker = ({ visible, onClose, onPicked }) => {
+const ExercisePicker = ({ visible, onClose, onPicked, typeProg }) => {
     const [ count, setCount ] = useState(0);
     const [ checkedExercises, setCheckedExercises ] = useState([]);
     const [ exercises, setExercises ] = useState([]);
@@ -69,6 +69,9 @@ const ExercisePicker = ({ visible, onClose, onPicked }) => {
                         criteria,
                         scale: undefined,
                     }));
+                    break;
+                case 'THEORETICAL':
+                    exerciseScale.scale = undefined ;
                     break;
                 case 'FIGHT':
                     const round = exercise.rounds[0];
@@ -126,6 +129,10 @@ const ExercisePicker = ({ visible, onClose, onPicked }) => {
         {
             name: 'Combat',
             value: 'FIGHT'
+        },
+        {
+            name: 'Théorique',
+            value: 'THEORETICAL'
         }
     ];
     return (
@@ -165,7 +172,9 @@ const ExercisePicker = ({ visible, onClose, onPicked }) => {
                     placeholder="Rechercher par nom"
                 />
             </div>
+
             <div className="exercises">
+                {renderSelectedExercisesInfo()}
                 {filteredExercises.map((exercise, index) =>
                     <Exercise
                         exercise={exercise}
@@ -179,11 +188,13 @@ const ExercisePicker = ({ visible, onClose, onPicked }) => {
     )
 }
 
+
 const Exercise = ({ exercise, checked, onChecked }) => {
     const handleChecked = () => onChecked(!checked);
 
     return(
         <div className="Exercise" onClick={handleChecked}>
+            
             <Checkbox
                 checked={checked}
                 onChange={handleChecked}
@@ -191,6 +202,7 @@ const Exercise = ({ exercise, checked, onChecked }) => {
             />
             <span className="title">{exercise.name}</span>
             <span className="type">{exercise.type}</span>
+              
         </div>
     )
 }

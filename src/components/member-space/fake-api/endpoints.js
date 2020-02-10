@@ -13,6 +13,7 @@ export const Ranks = {
 export const ExerciseResults = {
     byId: (id) => fakeExerciseResults(1).then(exerciseResults => exerciseResults[0]),
     byTestResultIdAndExerciseId: (testId) => api.ExerciseResults.byTestResultId(testId),
+    update: (exerciseResult) =>  api.ExerciseResults.update(exerciseResult),
     byRankIdAndPerformerId: (rankId, performerId) => fakeExerciseResults(rankId),
     byTestIdAndPerformerId: (testId, performerId) => fakeExerciseResults(testId),
 };
@@ -43,6 +44,9 @@ const fakeExerciseResults = (rankId) => Ranks.byId(rankId).then(rank => {
                 break;
             case 'PHYSICAL':
                 exerciseResult.score = randomScore(20);
+                break;
+            case 'THEORETICAL':
+                exerciseResult.score = randomScore(exerciseResult.exerciseScale.scale);
                 break;
             default:
                 break;

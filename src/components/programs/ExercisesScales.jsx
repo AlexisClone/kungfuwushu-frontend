@@ -49,6 +49,8 @@ const ExerciseScale = ({ exerciseScale, onRemove, onChange }) => {
                 return <Taolu exerciseScale={exerciseScale} onChange={onChange}/>
             case 'FIGHT':
                 return <Fight exerciseScale={exerciseScale} onChange={onChange}/>
+            case 'THEORETICAL':
+                return <Theoretical exerciseScale={exerciseScale} onChange={onChange}/>
             default:
                 return null;
         }
@@ -65,6 +67,33 @@ const ExerciseScale = ({ exerciseScale, onRemove, onChange }) => {
             {renderContent()}
         </div>
     )
+}
+
+
+const Theoretical = ({ exerciseScale, onChange }) => {
+    const handleChange = (value)=> {
+        onChange({
+            ...exerciseScale,
+            scale : value
+        })
+    }
+    const {exercise,scale} = exerciseScale;
+    return (
+        <div className="bareme">
+            <span className="Question">{exercise.question}</span>
+            <div className="question-scale">
+                <span>Barème de la question :</span>
+                <Tooltip title="Barème">
+                    <InputNumber
+                        min={0}
+                        value={scale || ''}
+                        onChange={handleChange}
+                        className="rounds-input"
+                    />
+                </Tooltip>
+            </div>
+        </div>
+    );
 }
 
 const Fight = ({ exerciseScale, onChange }) => {

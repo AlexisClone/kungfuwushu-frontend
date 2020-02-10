@@ -39,7 +39,7 @@ class HomePage extends React.Component<IDashboardProps, IPageState> {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Grid container={true} spacing={24}>
+                <Grid container={true} spacing={3}>
                     <Grid item={true} lg={4} xs={12} sm={6}>
                         <Paper className={classNames(classes.paper, classes.headerTiles)}>
                             <BusinessIcon className={classes.headerTileIcon} />
@@ -71,7 +71,7 @@ const styles = (theme: Theme) => ({
         marginBottom: 24,
     },
     paper: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
@@ -92,7 +92,7 @@ const styles = (theme: Theme) => ({
         color: theme.palette.grey["400"],
     },
     sectionTitle: {
-        paddingLeft: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing(2),
     },
     chart: {
         width: '100%'

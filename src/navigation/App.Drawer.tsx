@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import FaceIcon from '@material-ui/icons/Face';
 import BusinessIcon from '@material-ui/icons/BusinessCenter';
@@ -11,16 +12,13 @@ import Assessment from '@material-ui/icons/Assessment';
 import Grade from '@material-ui/icons/Grade';
 import { Drawer, IconButton, Divider, Theme, ListItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-
-
-import { NavLink } from 'react-router-dom';
-import { styles } from './styles';
-import {Utility} from "../state/Utility";
-import {User} from "../state/User";
 const classNames = require('classnames');
+import { styles } from './styles';
+
+import { Utility, User } from "../store/state";
 
 interface IAppDrawer {
-    authentication?: User;
+    user?: User;
     utility: Utility;
     classes?: any;
     theme?: Theme;
@@ -44,10 +42,10 @@ class AppDrawer extends React.Component<IAppDrawer, {}> {
     ];
 
     public render(): JSX.Element {
-        const { authentication, classes, utility } = this.props;
+        const { user, classes, utility } = this.props;
         return (
             <Drawer
-                hidden={!authentication}
+                hidden={!user}
                 variant="permanent"
                 classes={{
                     paper: classNames(classes.drawerPaper, !utility.drawerOpen && classes.drawerPaperClose),

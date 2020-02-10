@@ -92,7 +92,8 @@ const TestForm: FC <{
 					</div>
 				</React.Fragment>
 			}
-			<h2>Heure et date de rendez-vous</h2>
+
+			<h2>Heure et date de rendu</h2>
 			<DatePicker
 				showTime
 				format="LLLL"

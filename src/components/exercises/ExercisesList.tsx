@@ -1,21 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
-
 import { Button } from 'antd';
-
 import { Card, Loading } from '../custom';
-
 import * as api from '../../api';
-
 import { Exercise } from '../../types';
-
 import ExerciseItem from './ExerciseItem';
-
 import './ExercisesList.css';
 
 const ExercisesList: FC<{
     history: any
 }> = ({ history }) => {
-  // recup exercises
 	const [ exercises, setExercises ] = useState<Array<Exercise>>([]);
 
 	useEffect(() => {
@@ -26,10 +19,13 @@ const ExercisesList: FC<{
 	}, []);
 
 	const handleDelete = (exerciseId: number) => () => {
-		api.Exercises.delete(exerciseId);
-		setExercises(
-			exercises.filter(exercise => exercise.id !== exerciseId)
-		)
+		api.Exercises.delete((exerciseId))
+    .then(() => {
+      setExercises(exercises.filter(exercise => exercise.id !== exerciseId))
+    })
+    .catch(() => {
+      alert("La suppression a échoué");
+    });
 	}
 
   if (!exercises)

@@ -13,7 +13,8 @@ import { isValidated as isExerciseResultValidated } from '../../utils/ExerciseRe
 const ExerciseItem: FC<{
     exerciseScale: ExerciseScale;
     exerciseResult?: ExerciseResult;
-}> = ({ exerciseScale, exerciseResult }) => {
+    testId? : number;
+}> = ({ exerciseScale, exerciseResult, testId }) => {
     const isResult = !!exerciseResult;
     const isValidated = isResult ? isExerciseResultValidated(exerciseResult) : undefined;
     
@@ -22,7 +23,7 @@ const ExerciseItem: FC<{
     return (
         <Link
             to={isResult ?
-                `/exercises-results/${exerciseResult.id}` :
+                `/exercises-results/${exerciseResult.id}/${testId}` :
                 `/exercises-scales/${exerciseScale.id}`
             }
         >

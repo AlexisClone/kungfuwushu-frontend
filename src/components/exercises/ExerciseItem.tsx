@@ -1,12 +1,9 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-
 import { ReactComponent as EditIcon } from '../../icons/edit.svg';
 import { ReactComponent as DeleteIcon } from '../../icons/delete.svg';
-
 import classNames from 'classnames';
 import { Exercise } from '../../types';
-
 import './ExerciseItem.css';
 
 const ExerciseItem: FC<{

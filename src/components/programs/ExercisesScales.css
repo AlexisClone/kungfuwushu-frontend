@@ -65,6 +65,16 @@
     display: flex;
 }
 
+.ExerciseScale .question-scale {
+    display: flex;
+    margin-left: 24px;
+    margin-top: 10px;
+}
+
+.ExerciseScale .Question {
+    margin-top: 10px;
+    font-style:italic
+}
 .ExerciseScale .rounds-input {
     margin-left: 12px;
 }

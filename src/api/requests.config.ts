@@ -10,11 +10,11 @@ export const get = (url: string, config?: AxiosRequestConfig) => {
 }
 
 export const post = (url: string, data: any, config?: AxiosRequestConfig) => {
-    return axios.post(`${API_ROOT}${url}`, data, { ...config, headers: { Authorization: 'Bearer' + Cookies.get('token') } }).then(responseData);
+    return axios.post(`${API_ROOT}${url}`, data, { ...config, headers: { Authorization: Cookies.get('token') } }).then(responseData);
 }
 
 export const put = (url: string, data?: any, config?: AxiosRequestConfig) => {
-    return axios.put(`${API_ROOT}${url}`, data || undefined, { ...config, headers: { Authorization: 'Bearer' + Cookies.get('token') } }).then(responseData);
+    return axios.put(`${API_ROOT}${url}`, data || undefined, { ...config, headers: { Authorization: Cookies.get('token') } }).then(responseData);
 };
 
 export const del = (url: string) => {

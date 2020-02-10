@@ -1,47 +1,43 @@
 //#region
 import * as React from 'react';
-
+import { FormattedMessage } from 'react-intl';
+import { Route, withRouter } from 'react-router-dom';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader';
-const classNames = require('classnames');
-import {withStyles} from '@material-ui/core/styles';
+import * as _ from 'lodash';
+
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
-import * as _ from 'lodash';
-import {Menu, MenuItem} from '@material-ui/core';
-import {Route, withRouter} from 'react-router-dom';
+import { Menu, MenuItem } from '@material-ui/core';
 import Hidden from '@material-ui/core/Hidden';
-import {styles} from './styles';
-import {IApplicationProps} from '../actions/App.Actions';
-import * as AppActionCreators from '../actions/App.Actions';
-
-import {connect} from 'react-redux';
-
-import {bindActionCreators, Dispatch} from 'redux';
+const classNames = require('classnames');
+import { styles } from './styles';
 
 import AppDrawer from './App.Drawer';
-import Home from "../pages/Home";
-import {TrainingsList} from "../trainings";
-import {MemberDetails} from "../members";
-import {AccountPage} from "../pages/Account";
-import {isAuthenticated} from "../state/AppState";
-//import {ProfilePage} from "../pages/Profile";
-//import {isAuthenticated} from "../state/AppState";
-
-
-import { FormattedMessage } from 'react-intl';
+import { TrainingsList } from "../trainings";
+import { MemberDetails } from "../members";
+import { HomePage, AccountPage, SignUpPage } from "../pages/";
 import { EvaluateGroup } from "../components/evaluate";
 import { TestsList, NewTest, EditTest } from "../components/tests";
 import { RanksList, NewRank, EditRank } from "../components/ranks";
 import { MyRank, MyTests, TestDetails, ExerciseResultDetails, ExerciseScaleDetails } from "../components/member-space";
 import { ProgramsList, NewProgram, EditProgram } from "../components/programs";
 import { ExercisesList, NewExercise, EditExercise } from "../components/exercises";
+<<<<<<< HEAD
 import GroupsList from "../components/groups/GroupsList";
 import EditGroup from "../components/groups/EditGroup";
 import NewGroup from '../components/groups/NewGroup';
+=======
+
+import { IApplicationProps, openDrawer, closeDrawer, logout } from '../store/actions';
+import { isAuthenticated } from "../store/state";
+>>>>>>> account-creation
 //#endregion
 
 interface IAppProps extends IApplicationProps {
@@ -61,30 +57,18 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
         notificationEl: null
     };
 
-    public componentWillMount() {
-        //this.props.fetchMembers();
-    }
-
-
     private handleMenu = (event: any) => {
         this.setState({ anchorEl: event.currentTarget });
     };
 
-    private handleMenuClose = (path?: string) => {
-        this.setState({anchorEl: null});
-        this.navigate(path);
+    private handleMenuClose = () => {
+        this.setState({ anchorEl: null });
     };
 
     public handleLogout = () => {
         this.props.logout();
         this.handleMenuClose();
     };
-
-    private navigate = (path?: string) => {
-        if (path) {
-            this.props.history.push(path);
-        }
-    }
 
     public handleDrawerOpen = () => {
         this.props.openDrawer();
@@ -95,11 +79,10 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     };
 
     private renderAppBar() {
-        if (this.props.authentication) {
-            const {classes, utility} = this.props;
-            const {anchorEl} = this.state;
+        if (this.props.user) {
+            const { classes, utility } = this.props;
+            const { anchorEl } = this.state;
             const open = Boolean(anchorEl);
-
 
             return (
                 <AppBar
@@ -115,7 +98,7 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
                         >
                             <MenuIcon/>
                         </IconButton>
-                        <Typography className={classes.fillSpace} variant="title" color="inherit" noWrap={true}>
+                        <Typography className={classes.fillSpace} color="inherit" noWrap={true}>
                             <FormattedMessage id="app.welcome"
                                               defaultMessage="Welcome to your kung fu APP"
                                               description="Welcome Message"/>
@@ -141,9 +124,9 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
                                     horizontal: 'right',
                                 }}
                                 open={open}
-                                onClose={this.handleMenuClose.bind(this, undefined)}
+                                onClose={this.handleMenuClose}
                             >
-                                <MenuItem onClick={this.handleMenuClose.bind(this, '/account')}>{this.props.authentication.name}</MenuItem>
+                                <MenuItem onClick={this.handleMenuClose}>{this.props.user.username}</MenuItem>
                                 <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                             </Menu>
                         </div>
@@ -157,19 +140,15 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
 
     private renderAccount = () => {
-        return (
-            <AccountPage user={this.props.authentication} login={this.props.login} match={this.props.match}
-                         location={this.props.location}/>
-        );
+        return (<AccountPage />);
     }
 
     private renderDrawer() {
-        const {utility, authentication} = this.props;
         return (
-            <Hidden mdDown={!utility.drawerOpen && true}>
+            <Hidden mdDown={!this.props.utility.drawerOpen && true}>
                 <AppDrawer
-                    utility={utility}
-                    authentication={authentication}
+                    utility={this.props.utility}
+                    user={this.props.user}
                     handleDrawerClose={this.handleDrawerClose}
                 />
             </Hidden>
@@ -179,8 +158,6 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
     public render() {
         const {classes} = this.props;
 
-
-
         return (
             <div className={classes.root}>
                 {this.renderAppBar()}
@@ -188,11 +165,29 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
 
                 <main className={classes.content}>
                     <div className={classes.toolbar}/>
-                    <Route path='/' exact={true} component={isAuthenticated(Home as any)}/>
+                    <Route path='/' exact={true} component={isAuthenticated(HomePage as any)}/>
                     <Route path='/members' component={isAuthenticated(MemberDetails as any)}/>
                     <Route path='/trainings' component={isAuthenticated(TrainingsList as any)}/>
                     <Route path='/account' render={this.renderAccount} />
+                    <Route path='/new-exercise' component={isAuthenticated(NewExercise)} />
+                    <Route path='/exercises/:id/edit' component={isAuthenticated(EditExercise)} />
+                    <Route exact path='/programs' component={isAuthenticated(ProgramsList)} />
+                    <Route path='/new-program' component={isAuthenticated(NewProgram)} />
+                    <Route path='/programs/:id/edit' component={isAuthenticated(EditProgram)} />
+                    <Route exact path='/ranks' component={isAuthenticated(RanksList)} />
+                    <Route path='/new-rank' component={isAuthenticated(NewRank)} />
+                    <Route path='/ranks/:id/edit' component={isAuthenticated(EditRank)} />
+                    <Route exact path='/tests' component={isAuthenticated(TestsList)} />
+                    <Route path='/new-test' component={isAuthenticated(NewTest)} />
+                    <Route path='/tests/:id/edit' component={isAuthenticated(EditTest)} />
+                    <Route path='/tests/:id/evaluate-group' component={isAuthenticated(EvaluateGroup)} />
+                    <Route path='/myrank' component={isAuthenticated(MyRank)} />
+                    <Route exact path='/mytests' component={isAuthenticated(MyTests)} />
+                    <Route path='/mytests/:id' component={isAuthenticated(TestDetails)} />
+                    <Route path='/exercises-results/:id' component={isAuthenticated(ExerciseResultDetails)} />
+                    <Route path='/exercises-scales/:id' component={isAuthenticated(ExerciseScaleDetails)} />
                     <Route exact path='/exercices' component={ExercisesList} />
+<<<<<<< HEAD
                     <Route path='/new-exercise' component={NewExercise} />
                     <Route path='/exercises/:id/edit' component={EditExercise} />
                     <Route exact path='/programs' component={ProgramsList} />
@@ -213,19 +208,25 @@ class MiniDrawer extends React.Component<IAppProps, IState> {
                     <Route path='/mytests/:id' component={TestDetails} />
                     <Route path='/exercises-results/:id' component={ExerciseResultDetails} />
                     <Route path='/exercises-scales/:id' component={ExerciseScaleDetails} />
+=======
+
+                    <Route exact path='/signup' component={SignUpPage} />
+>>>>>>> account-creation
                 </main>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: IAppProps) => ({
     utility: state.utility,
-    authentication: state.authentication,
-    users: state.users
+    user: state.user
 });
 
-const mapDispatchtoProps = (dispatch: Dispatch) =>
-    bindActionCreators(_.assign({}, AppActionCreators), dispatch);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    openDrawer: () => dispatch(openDrawer()),
+    closeDrawer: () => dispatch(closeDrawer()),
+    logout: () => dispatch(logout())
+});
 
-export default hot(module)(withRouter(connect(mapStateToProps, mapDispatchtoProps)(withStyles(styles as any, {withTheme: true})(MiniDrawer as any)) as any));
+export default hot(module)(withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles as any, {withTheme: true})(MiniDrawer as any)) as any));

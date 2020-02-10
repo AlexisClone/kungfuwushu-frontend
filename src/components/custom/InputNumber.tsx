@@ -11,11 +11,11 @@ const CustomInputNumber: FC<{
     addonBefore?: any;
     addonAfter?: any;
     className?: string;
-}> = ({ value, min, max, onChange, addonBefore, addonAfter, className }) => {
+}> = ({ value, min, max, onChange, addonBefore, addonAfter, className, ...props }) => {
     const handleChange = ({target: {value}}: any) => onChange(parseInt(value));
 
 	return (
-        <div className={classNames("InputNumber", className)}>
+        <div className={classNames("InputNumber", className)} {...props}>
             {addonBefore &&
                 <div className="addon addon-before">
                     {addonBefore}

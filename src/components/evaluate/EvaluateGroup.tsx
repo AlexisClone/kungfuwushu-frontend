@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { FC, useEffect, useState, useRef } from 'react';
 import { withRouter, match } from 'react-router';
 
 import { Menu, Col, Button, Icon } from 'antd';
@@ -13,11 +13,10 @@ import * as api from '../../api';
 import { Rank, Test, ExerciseScale, Member, ExerciseResult, TestResult } from '../../types';
 import { create as createExerciseReult } from '../../utils/ExerciseResult.utils';
 
-interface IEvaluateGroup {
+const EvaluateGroup: FC<{
     match: match<any>;
-}
-
-const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
+    history: any;
+}> = ({ match, history }) => {
     const [ test, setTest ] = useState<Test>(undefined);
     const [ performers, setPerformers ] = useState<Array<Member>>([]);
     const [ exercisesScales, setExercisesScales ] = useState<Array<ExerciseScale>>([]);
@@ -25,7 +24,10 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
     const [ exerciseScale, setExerciseScale ] = useState<ExerciseScale>(undefined);
     const [ testsResults, setTestsResults ] = useState<Array<TestResult>>([]);
     const [ testResult, setTestResult ] = useState<TestResult>(undefined);
-    const [ exerciseResult, setExerciseResult ] = useState<ExerciseResult>(undefined);
+    const [ exerciseResult, setExerciseResult ] = useState<{
+        base: ExerciseResult;
+        modified: ExerciseResult;
+    }>(undefined);
 
     useEffect(() => {
         const testId = match.params.id;
@@ -50,9 +52,14 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
                         );
                     });
         });
-    }, []);
 
-    useEffect(() => () => save(), [exerciseResult, testResult]);
+        const unlistenSave = history.listen(save);
+        window.addEventListener("beforeunload", save);
+        return () => {
+            window.removeEventListener("beforeunload", save);
+            unlistenSave();
+        }
+    }, []);
 
     useEffect(() => {
         save();
@@ -67,9 +74,11 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
         setTestResult(testResult);
         api.ExerciseResults.byTestResultIdAndExerciseScaleId(testResult.id, exerciseScale.id)
             .then((exercisesResults: ExerciseResult[]) => {
-                setExerciseResult(exercisesResults.length > 0 ?
-                    exercisesResults[0] : createExerciseReult(exerciseScale)
-                );
+                const exerciseResult = exercisesResults.length > 0 ? exercisesResults[0] : createExerciseReult(exerciseScale);
+                setExerciseResult({
+                    base: exerciseResult,
+                    modified: exerciseResult
+                });
             });
     }, [performer, exerciseScale]);
 
@@ -77,10 +86,11 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
         setExercisesScales(exercisesScales);
         setExerciseScale(exercisesScales.length > 0 ? exercisesScales[0] : undefined)
     }
-    
-    const handleExerciseScaleSelected = (exerciseScale: ExerciseScale) => () => setExerciseScale(exerciseScale);
 
-    const handlePerformerSelected = (performer: Member) => () => setPerformer(performer);
+    const handleExerciseResultChange = (modified: ExerciseResult) => setExerciseResult({
+        ...exerciseResult,
+        modified
+    });
 
     const handleNext = () => {
         const performerIndex = performers.indexOf(performer);
@@ -93,20 +103,20 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
         }
     }
 
-    const handleExerciseResultChange = (exerciseResult: ExerciseResult) => {
-        const newE ={
-            ...exerciseResult,
-            modified: true
-        };
-        setExerciseResult(newE);
-    }
-
+    const exerciseResultRef = useRef(exerciseResult);
+    const testResultRef = useRef(testResult);
+    useEffect(() => {
+        exerciseResultRef.current = exerciseResult;
+        testResultRef.current = testResult;
+    }, [exerciseResult, testResult]);
     const save = () => {
-        if (exerciseResult && exerciseResult.modified) {
-            if (exerciseResult.id)
-                api.ExerciseResults.update(exerciseResult);
+        const exerciseResult = exerciseResultRef.current;
+        const testResult = testResultRef.current;
+        if (exerciseResult && exerciseResult.base !== exerciseResult.modified) {
+            if (exerciseResult.modified.id)
+                api.ExerciseResults.update(exerciseResult.modified);
             else 
-                api.ExerciseResults.create(testResult.id, exerciseResult);
+                api.ExerciseResults.create(testResult.id, exerciseResult.modified);
         }
     }
 
@@ -120,7 +130,7 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
                     {exercisesScales.map(exerciseScale => 
                         <Menu.Item
                             key={exerciseScale.id}
-                            onClick={handleExerciseScaleSelected(exerciseScale)}
+                            onClick={() => setExerciseScale(exerciseScale)}
                         >
                             <span>{exerciseScale.exercise.name}</span>
                         </Menu.Item>
@@ -133,7 +143,7 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
                     {performers.map((performer) =>
                         <Menu.Item
                             key={performer.id}
-                            onClick={handlePerformerSelected(performer)}
+                            onClick={() => setPerformer(performer)}
                         >
                             <span>{performer.firstName + " " + performer.lastName}</span>
                         </Menu.Item>
@@ -142,7 +152,7 @@ const EvaluateGroup: FC<IEvaluateGroup> = ({ match }) => {
             </Col>
             <Col xs={14} sm={14} md={14} lg={14} xl={14} className="exercise-panel">
                 <EvaluateExercise
-                    exerciseResult={exerciseResult}
+                    exerciseResult={exerciseResult ? exerciseResult.modified : undefined}
                     onChange={handleExerciseResultChange}
                 />
                 <div className="next">

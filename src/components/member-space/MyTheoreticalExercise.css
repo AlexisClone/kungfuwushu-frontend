@@ -1,0 +1,22 @@
+
+.EvaluateTheoretical .Question {
+    -webkit-box-shadow: 0 1px 20px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 5px;
+    background-color:white;
+    color:#666666;
+    align-items: center;
+    display: flex;
+    padding: 16px 24px;
+}
+
+.Question {
+    margin-left: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.EvaluateTheoretical .enonceQuestion {
+    font-weight:bold;
+    font-size: 120%;
+}

@@ -15,7 +15,7 @@ const EditExercise = ({ match, history }) => {
             .then(exercise =>
                 setExercise(exercise)
             );
-    }, []);
+    });
 
 	const handleSave = () => {
         api.Exercises.update(exercise)

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
-
 import './ExerciseForm.css';
-import { Input, Modal, Radio, Button } from 'antd';
-
+import { Input, Radio, Button } from 'antd';
 import { ImagePicker, Card } from '../custom';
 
 const { TextArea } = Input;

@@ -30,6 +30,11 @@ export const create = (exerciseScale: ExerciseScale): ExerciseResult => {
                 ...exerciseResult,
                 score: 0,
             };
+        case ExerciseType.THEORETICAL:
+            return {
+                ...exerciseResult,
+                score: 0,
+            };
         default:
             return undefined;
     }
@@ -47,6 +52,8 @@ export const getScore = (exerciseResult: ExerciseResult): number => {
                     sum + criteriaResult.score
                 , 0)
             }, 0);
+        case ExerciseType.THEORETICAL:
+            return exerciseResult.score;
         case ExerciseType.PHYSICAL:
             return exerciseResult.score;
         default:
@@ -66,6 +73,8 @@ export const getScale = (exerciseResult: ExerciseResult): number => {
                     sum + criteriaScale.scale
                 , 0)
             }, 0);
+        case ExerciseType.THEORETICAL:
+            return exerciseResult.exerciseScale.scale;
         default:
             return undefined;
     }
@@ -77,6 +86,8 @@ export const isValidated = (exerciseResult: ExerciseResult): boolean => {
             return true;
         case ExerciseType.TAOLU:
         case ExerciseType.FIGHT:
+            return getScore(exerciseResult) >= getScale(exerciseResult) / 2;
+        case ExerciseType.THEORETICAL:
             return getScore(exerciseResult) >= getScale(exerciseResult) / 2;
         default:
             return false;
